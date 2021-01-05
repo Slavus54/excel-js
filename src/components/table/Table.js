@@ -32,19 +32,11 @@ export class Table extends ExcelComponent {
     }
 
     onMousemove(event) {
-        // if (this.curCol !== null) {
-        //     this.diffX = event.clientX - this.curX
-        //     let styles = getComputedStyle(this.curCol)
-        //     let done = styles.width.split('').filter(el => el !== 'p')
-        //     let donen = done.filter(el => el !== 'x')
-        //     donen = donen.join('')
-        //     let finish = Math.floor(parseInt(donen) + parseInt(this.diffX)).toString()
-        //     this.curCol.style.width = finish + 'px'
-        // }
+     
        
     }
 
     onMouseup() {
-        //console.log('table mouseup')
+ 
     }
 }
