@@ -35,6 +35,18 @@ class Dom {
             this.el.appendChild(node)
         }
     }
+
+    closest(sel) {
+        return $(this.el.closest(sel))
+    }
+
+    getCords() {
+        return this.el.getBoundingClientRect()
+    }
+
+    css(styles) {
+        this.el.style[styles.key] = styles.value
+    }
 }
 
 export function $(sel) {
