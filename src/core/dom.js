@@ -47,6 +47,23 @@ class Dom {
     css(styles) {
         this.el.style[styles.key] = styles.value
     }
+
+    find (selector) {
+        return this.el.querySelector(selector)
+    }
+
+    focus() {
+        this.el.focus()
+        return this
+    }
+
+    text(text) {
+        if (typeof text === 'string') {
+            this.el.textContent = text
+            return this
+        }
+        return this.el.textContent.trim()
+    }   
 }
 
 export function $(sel) {

@@ -1,17 +1,22 @@
 import {$} from '../../core/dom'
+import {Emitter} from '../../core/Emitter'
 
 export class Excel {
     constructor(selector, opt) {
         this.$el = $(selector)
         this.components = opt.components || []
+        this.emmiter = new Emitter()
     }
 
     getRoot() {
         const $root = $.create('div', 'excel')
-        console.log($root)
+        
         this.components = this.components.map(Component => {
             const el = $.create('div', Component.className)
-            const comp = new Component(el)
+            const comp = new Component(el, {
+                emitter: this.emmiter
+            })
+           
             el.html(comp.toHTML())
             $root.append(el) 
             return comp
@@ -21,6 +26,10 @@ export class Excel {
     render() {
         this.$el.append(this.getRoot())
         this.components.forEach(comp => comp.init())
-        //this.components.forEach(comp => comp.remove())
+        
+    }
+
+    remove() {
+        this.components.forEach(comp => comp.remove())
     }
 }
