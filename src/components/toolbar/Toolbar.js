@@ -1,38 +1,49 @@
 import {ExcelComponent} from '../../core/ExcelComponent'
+import {ExcelStateComponent} from '../../core/ExcelStateComponent' 
+import {createToolbar} from './toolbar.template' 
+import {$} from '../../core/dom'
 
-export class Toolbar extends ExcelComponent {
+export class Toolbar extends ExcelStateComponent {
     static className = 'excel__toolbar'
 
     constructor (root, options) {
         super(root, {
             name: 'Toolbar',
             listeners: ['click'],
+            subscribe: ['currentStyle'],
             ...options
         })
     }
 
-    toHTML() {
-        return `<div class="button">
-        <i class="material-icons">format_align_left</i>
-    </div>
-    <div class="button">
-        <i class="material-icons">format_align_center</i>
-    </div>
-    <div class="button">
-        <i class="material-icons">format_align_right</i>
-    </div>
-    <div class="button">
-        <i class="material-icons">format_bold</i>
-    </div>
-    <div class="button">
-        <i class="material-icons">format_italic</i>
-    </div>
-    <div class="button">
-        <i class="material-icons">format_underlined</i>
-    </div>`
+    prepare() {
+        this.initState({
+            textAlign: 'left',
+            fontWeight: 'normal',
+            textDecoration: 'none',
+            fontStyle: 'normal'
+        })
     }
 
+    get template () {
+        return createToolbar(this.state)
+    }
+
+    toHTML() {
+        return this.template
+    }
+
+    storeChanged(data) {
+        this.setState(data.currentStyle)
+    }   
+
     onClick(event) {
-        console.log(event)
+        const target = event.target
+        
+        if (target.dataset.type === 'button' || target.children[0].dataset.type === 'button') {
+
+            let valen = JSON.parse(target.parentNode.dataset.value)
+            this.$emit('toolbar:addStyle', valen)
+            console.log(this.state)
+        }
     }
 }

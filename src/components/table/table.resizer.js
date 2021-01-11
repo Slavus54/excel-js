@@ -1,46 +1,59 @@
 import {$} from '../../core/dom'
 
 export function columnResizer(event) {
-    const target = $(event.target)
+    return new Promise(resolve => {
+        const target = $(event.target)
 
-    const parent = target.closest('[data-type="res"]')
-            const coords = parent.getCords()
-            let cells = document.querySelectorAll('.cell')
-            let selectedCells = []
+        const parent = target.closest('[data-type="res"]')
+        const coords = parent.getCords()
+        let cells = document.querySelectorAll('.cell')
+        let selectedCells = []
 
-            for (let i = 0; i < cells.length; i++) {
-               if (parent.el.dataset.index === cells[i].dataset.index) {
-                    selectedCells.push(cells[i])
-               }
+        for (let i = 0; i < cells.length; i++) {
+            if (parent.el.dataset.index === cells[i].dataset.index) {
+                selectedCells.push(cells[i])
+            }
+        }
+       
+        
+    
+    
+                
+                
+    
+        document.onmousemove = e => {
+            let delta = Math.floor(e.pageX - coords.right)
+            let arren = {key: 'width', value: Math.floor(coords.width + delta) + 'px'}
+            
+            parent.css(arren)
+            
+            for (let i = 0; i < selectedCells.length; i++) {
+                
+                selectedCells[i].style.width = Math.floor(coords.width + delta) + 'px'
+                selectedCells[i].children[0].classList.toggle('col-resize__active')
+                selectedCells[i].children[0].classList.toggle('col-resize')
+            }
+        }
+
+        //let valen = Math.floor(coords.width + delta)
+  
+        document.onmouseup = () => {
+            document.onmousemove = null
+            for (let i = 0; i < selectedCells.length; i++) {
+                selectedCells[i].children[0].classList.toggle('col-resize')
             }
 
-
-            
-            
-
-    document.onmousemove = e => {
-        const delta = Math.floor(e.pageX - coords.right)
-        let arren = {key: 'width', value: Math.floor(coords.width + delta) + 'px'}
-        
-        parent.css(arren)
-        
-        for (let i = 0; i < selectedCells.length; i++) {
-            
-            selectedCells[i].style.width = Math.floor(coords.width + delta) + 'px'
-            selectedCells[i].children[0].classList.toggle('col-resize__active')
-            selectedCells[i].children[0].classList.toggle('col-resize')
+            resolve({
+                value: parseInt(parent.el.style.width.split('px').join('')),
+                id: parent.el.dataset.index
+            })
         }
-    }
-
-    document.onmouseup = () => {
-        document.onmousemove = null
-        for (let i = 0; i < selectedCells.length; i++) {
-            selectedCells[i].children[0].classList.toggle('col-resize')
-        }
-    }
+    })
+    
 }
 
 export function rowResizer(event) {
+    return new Promise(resolve => {
     const target = $(event.target)
     const parent = target.closest('[data-type="res"]')
     const coords = parent.getCords()
@@ -74,5 +87,12 @@ export function rowResizer(event) {
                 }
             }
         }
+
+        resolve({
+            value: parseInt(parent.el.style.height.split('px').join('')),
+            id: indexes
+        })
     }
+
+    })
 }

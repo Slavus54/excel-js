@@ -1,0 +1,6 @@
+export const TABLE_RESIZE = 'TABLE-RESIZE'
+export const ROW_RESIZE = 'ROW_RESIZE'
+export const CHANGE_TEXT = 'CHANGE_TEXT'
+export const APPLY_STYLE = 'APPLY_STYLE'
+export const CURRENT_CELL = 'CURRENT_CELL'
+export const SET_TABLENAME = 'SET_TABLENAME'
