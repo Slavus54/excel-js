@@ -2,7 +2,10 @@ import {ExcelComponent} from '../../core/ExcelComponent'
 import {createTable} from './table.template'
 import {$} from '../../core/dom'
 import {columnResizer, rowResizer} from './table.resizer'
-import {TableSelection} from './TableSelection ' 
+import {TableSelection} from './TableSelection '
+import * as actions from '../../redux/actions' 
+import {storage} from '../../core/utils'
+import {parse} from '../../core/parse'
 
 export class Table extends ExcelComponent {
     static className = 'excel__table'
@@ -23,7 +26,8 @@ export class Table extends ExcelComponent {
     }
 
     toHTML() {
-        return createTable(10) 
+        let state = storage('excel-state')
+        return createTable(10, state) 
     }
 
     init() {
@@ -36,12 +40,34 @@ export class Table extends ExcelComponent {
             let col = this.curSel.dataset.id.split(':')[1]
             const cur = this.root.find([`[data-id="${row}:${col}"]`])
             cur.textContent = text
-           
+            this.$dispatch(actions.changeText({
+                id: this.curSel.dataset.id,
+                value: text
+            }))
+            this.curSel.attr('data-value', text).text(parse(text))
         })
-        this.$on('formula:done', () => {
-            console.log('Yes')
+  
+        this.$on('formula:done', (e) => {
+            let text = this.curSel.textContent
+            this.curSel.textContent = parse(text)
             this.curSel.focus()
+            console.log(e.path[0])
+            e.path[0].textContent = ''
+            console.log('Yes')
         })
+
+        this.$on('toolbar:addStyle', style => {
+            console.log(style)
+            this.selector.addStyle(style)
+            this.$dispatch(actions.applyStyle({
+                value: style,
+                ids: this.selector.getIds()
+            }))
+        })
+
+       
+
+        rerender()
     }
 
 
@@ -55,13 +81,25 @@ export class Table extends ExcelComponent {
           
     }
 
+    async resizeCol(e) {
+        const data = await columnResizer(e)
+        console.log('res data'+ data.id)
+        this.$dispatch(actions.TableResize(data))
+    }
+
+    async resizeRow(e) {
+        const data = await rowResizer(e)
+        console.log('res data'+ data.value)
+        this.$dispatch(actions.RowResize(data))
+    }
+
     onMousedown(event) {
         if (event.target.dataset.resize === 'col') {
-
-            columnResizer(event)
+            this.resizeCol(event)
+            
 
         } else if (event.target.dataset.resize === 'row') {
-            rowResizer(event)
+            this.resizeRow(event)
         } else if (event.target.dataset.type === 'cell') {
             if (event.shiftKey === true) {
                 const started = event.target
@@ -69,11 +107,21 @@ export class Table extends ExcelComponent {
                 document.onmouseup = e => {
                     this.selector.selectGroup(started, e.target, this.root)
                 }
+        
             } else if (event.target.dataset.type === 'cell') {
                 this.deleteSelect(this.curSel)
                 this.curSelValue = ''
-                this.curSel = event.target 
-                console.log(event)
+                this.curSel = event.target
+                let currenen = $(event.target)
+                let movementData = this.curSel.textContent 
+                this.$emit('table:move-value', movementData)
+                const styles = currenen.getStyles(Object.keys({
+                    textAlign: 'left',
+                    fontWeight: 'normal',
+                    textDecoration: 'none',
+                    fontStyle: 'normal'
+                }))
+                this.$dispatch(actions.changeCurrSt(styles))
                 this.selector.selectOne(event.target)
             }
 
@@ -111,7 +159,11 @@ export class Table extends ExcelComponent {
     onInput(event) {
         
         this.curSelValue += event.data
-        this.$emit('table:move-input', {value: this.curSelValue, place: this.curSel})
+        this.$dispatch(actions.changeText({
+            id: this.curSel.dataset.id,
+            value: this.curSelValue
+        }))
+        //this.$emit('table:move-input', {value: this.curSelValue, place: this.curSel})
         console.log(this.curSelValue)
     }
 }
@@ -136,4 +188,14 @@ function nextSel(key, row, col) {
     }
 
     return [`[data-id="${row}:${col}"]`]
+}
+
+function rerender() {
+   let cols = document.querySelectorAll('.column')
+
+   cols.forEach(el => {
+       if (el.dataset.width !== undefined) {
+           el.style.width = el.dataset.width + 'px'
+       }
+   })
 }

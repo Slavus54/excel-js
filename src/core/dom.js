@@ -6,9 +6,9 @@ class Dom {
     html(html) {
         if (typeof html === 'string') {
             this.el.innerHTML = html
+            
             return this
         }
-
         return this.el.outerHTML
     }
 
@@ -48,6 +48,13 @@ class Dom {
         this.el.style[styles.key] = styles.value
     }
 
+    getStyles(styles = []) {
+        return styles.reduce((res, c) => {
+            res[c] = this.el.style[c]
+            return res
+        }, {})
+    }
+
     find (selector) {
         return this.el.querySelector(selector)
     }
@@ -64,6 +71,14 @@ class Dom {
         }
         return this.el.textContent.trim()
     }   
+
+    attr(name, value) {
+        if (value) {
+            this.el.setAttribute(name, value)
+            return this
+        }
+        return this.el.getAttribute(name)
+    }
 }
 
 export function $(sel) {

@@ -1,3 +1,5 @@
+import {$} from '../../core/dom'
+
 export class TableSelection {
     constructor () {
         this.group = []
@@ -8,11 +10,13 @@ export class TableSelection {
     selectOne(target) {
         target.classList.toggle('selected')
         this.clearAllBefore(this.group)
+        this.group = []
         this.group.push(target)
         
     }
     
     selectGroup(start, end, root) {
+        this.group = []
         const cols = this.range(start.dataset.index, end.dataset.index)
         const rows = this.range(start.dataset.row, end.dataset.row)
         let cells = document.querySelectorAll('.cell')
@@ -32,13 +36,29 @@ export class TableSelection {
    
         arrs.forEach(e => {
             e.classList.add('selected')
+            this.group.push(e)
         })
        
+    }
+
+    addStyle(style) {
+        this.group.forEach(el => {
+            let key = Object.keys(style)
+            let valen = Object.values(style)
+            $(el).css({key, value: valen})
+        })
     }
 
     clearAllBefore(list) {
         list.forEach(el => {
             el.classList.remove('selected')
+        })
+        list = []
+    }
+
+    getIds() {
+        return this.group.map(el => {
+            return el.dataset.id
         })
     }
 
