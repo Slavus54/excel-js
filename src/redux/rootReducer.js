@@ -1,4 +1,4 @@
-import {TABLE_RESIZE, ROW_RESIZE, CHANGE_TEXT, APPLY_STYLE, CURRENT_CELL, SET_TABLENAME} from './types'
+import {TABLE_RESIZE, ROW_RESIZE, CHANGE_TEXT, APPLY_STYLE, CURRENT_CELL, SET_TABLENAME, SET_VIEW} from './types'
 import {stylesToString} from '../core/utils'
 
 export function rootReducer (state, action) {
@@ -31,6 +31,9 @@ export function rootReducer (state, action) {
 
         case SET_TABLENAME:
             return {...state, currentTableName: action.data}
+
+        case SET_VIEW:
+                return {...state, lastView: action.data}
         default: return state
     }
 }

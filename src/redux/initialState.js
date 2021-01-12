@@ -12,7 +12,8 @@ const defaultState = {
     textDecoration: 'none',
     fontStyle: 'normal'
   },
-  currentTableName: 'New table'
+  currentTableName: 'New table',
+  lastView: ''
 }
 
 const normalize = state => {
@@ -29,10 +30,9 @@ const normalize = state => {
       textDecoration: 'none',
       fontStyle: 'normal'
     },
-    currentTableName: state.currentTableName
+    currentTableName: state.currentTableName,
+    lastView: state.lastView
   }
-
-  storage('excel-state', newState)
 
   return newState
 } 
@@ -40,3 +40,7 @@ const normalize = state => {
 export const initialState = storage('excel-state')
   ? normalize(storage('excel-state'))
   : defaultState
+
+  export const normalizeState = state => {
+    return state ? normalize(state) : defaultState
+  }

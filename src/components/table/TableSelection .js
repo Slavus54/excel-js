@@ -8,7 +8,10 @@ export class TableSelection {
     }
 
     selectOne(target) {
-        target.classList.toggle('selected')
+        if (target !== null) {
+            target.classList.toggle('selected')
+        }
+      
         this.clearAllBefore(this.group)
         this.group = []
         this.group.push(target)
