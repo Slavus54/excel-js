@@ -7,11 +7,21 @@ const codes = {
 }
 
 function getWidth (state, i) {
-    return (state[i] || 120) + 'px'
+    if (state === undefined)  {
+        return 120 + 'px'
+    } else if (i !== undefined) {
+        return (state[i] || 120) + 'px'
+    }
+
 }
 
 function getHeight (state, i) {
-    return (state[i] || 24) + 'px'
+    if (state === undefined)  {
+        return 24 + 'px'
+    } else if (i !== undefined) {
+        return (state[i] || 24) + 'px'
+    }
+
 }
 
 function createCell(content, row, colState, dataState, stylesState) {
@@ -23,8 +33,12 @@ function createCell(content, row, colState, dataState, stylesState) {
             textDecoration: 'none',
             fontStyle: 'normal'
         }
-        let styles = stylesToString({...def, ...stylesState[iden]})
-        if (colState[i] !== undefined) {
+        let styles = ''
+        if (stylesState !== undefined) {
+            styles = stylesToString({...def, ...stylesState[iden]})
+        }
+   
+        if (colState[i] !== undefined && dataState !== undefined ) {
             return `
             <div class="cell" contenteditable data-type="cell" data-index=${i} data-row=${row} data-id=${row}:${i} style="${styles}; width: ${getWidth(colState, i)}" data-value=${ dataState[iden] || content}>
                 ${dataState[iden] !== undefined && typeof dataState[iden] === 'string' ? parse(dataState[iden]) : parse(content)}
@@ -32,10 +46,18 @@ function createCell(content, row, colState, dataState, stylesState) {
                 <div class="row-resize" data-resize="cell"></div>
             </div>  
             ` 
-        } else {
+        } else if (colState[i] === undefined && dataState !== undefined) {
             return `
             <div class="cell" contenteditable data-type="cell" data-index=${i} data-row=${row} data-id=${row}:${i} data-value=${ dataState[iden] || content}>
                 ${dataState[iden] !== undefined && typeof dataState[iden] === 'string' ? parse(dataState[iden]) : parse(content)}
+                <div class="col-resize" data-resize="cell"></div>
+                <div class="row-resize" data-resize="cell"></div>
+            </div>  
+            `
+        } else {
+            return `
+            <div class="cell" contenteditable data-type="cell" data-index=${i} data-row=${row} data-id=${row}:${i} data-value=${content}>
+                ${parse(content)}
                 <div class="col-resize" data-resize="cell"></div>
                 <div class="row-resize" data-resize="cell"></div>
             </div>  

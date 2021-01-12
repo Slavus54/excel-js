@@ -1,5 +1,6 @@
 class Dom {
     constructor (selector) {
+        this.sel = selector
         this.el = typeof selector === 'string' ? document.querySelector(selector) : selector
     }
 
@@ -78,6 +79,10 @@ class Dom {
             return this
         }
         return this.el.getAttribute(name)
+    }
+
+    removeNode(node) {
+        this.el.removeChild(node)
     }
 }
 

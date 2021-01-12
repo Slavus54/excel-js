@@ -9,6 +9,8 @@ export class ExcelComponent extends DomListener {
         this.storeSub = null
         this.unsubs = []
         this.subscribe = opt.subscribe || []
+        this.param = opt.param
+        this.view = opt.view
         this.prepare()
     }
     

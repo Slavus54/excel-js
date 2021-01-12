@@ -5,6 +5,7 @@ import {columnResizer, rowResizer} from './table.resizer'
 import {TableSelection} from './TableSelection '
 import * as actions from '../../redux/actions' 
 import {storage} from '../../core/utils'
+import {storageName} from '../../pages/ExcelPage'
 import {parse} from '../../core/parse'
 
 export class Table extends ExcelComponent {
@@ -22,11 +23,13 @@ export class Table extends ExcelComponent {
     }
 
     prepare() {
+       
         this.selector = new TableSelection()
     }
 
     toHTML() {
-        let state = storage('excel-state')
+        
+        let state = storage(storageName(this.param))
         return createTable(10, state) 
     }
 

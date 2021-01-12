@@ -8,7 +8,19 @@ export function capitalize(str = '') {
 
 export function storage(key, data) {
     if (!data) {
-        return JSON.parse(localStorage.getItem(key)) || localStorage.setItem(key, JSON.stringify({colState: {}}))
+        return JSON.parse(localStorage.getItem(key)) || localStorage.setItem(key, JSON.stringify({rowState: {},
+            colState: {},
+            dataState: {},
+            stylesState: {},
+            currentText: '',
+            currentStyle: {   
+              textAlign: 'left',
+              fontWeight: 'normal',
+              textDecoration: 'none',
+              fontStyle: 'normal'
+            },
+            currentTableName: 'New table',
+            lastView: ''}))
     }
 
     localStorage.setItem(key, JSON.stringify(data))

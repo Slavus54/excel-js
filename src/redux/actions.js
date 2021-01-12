@@ -1,4 +1,4 @@
-import {TABLE_RESIZE, ROW_RESIZE, CHANGE_TEXT, APPLY_STYLE, CURRENT_CELL, SET_TABLENAME} from './types'
+import {TABLE_RESIZE, ROW_RESIZE, CHANGE_TEXT, APPLY_STYLE, CURRENT_CELL, SET_TABLENAME, SET_VIEW} from './types'
 
 export function TableResize(data) {
     return {
@@ -38,6 +38,13 @@ export function applyStyle(data) {
 export function setTableName(data) {
     return {
         type: SET_TABLENAME,
+        data
+    }
+}
+
+export function setView(data) {
+    return {
+        type: SET_VIEW,
         data
     }
 }
