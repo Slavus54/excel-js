@@ -2,7 +2,7 @@ import {ExcelComponent} from '../../core/ExcelComponent'
 import {storage} from '../../core/utils'
 import {storag} from '../../redux/initialState'
 import * as actions from '../../redux/actions'
-import {storageName} from '../../pages/ExcelPage'
+import {storageName} from '../../core/LocalStorageSaver'
 
 export class Header extends ExcelComponent {
     static className = 'excel__header'
