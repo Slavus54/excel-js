@@ -5,7 +5,7 @@ import {columnResizer, rowResizer} from './table.resizer'
 import {TableSelection} from './TableSelection '
 import * as actions from '../../redux/actions' 
 import {storage} from '../../core/utils'
-import {storageName} from '../../pages/ExcelPage'
+import {storageName} from '../../core/LocalStorageSaver'
 import {parse} from '../../core/parse'
 
 export class Table extends ExcelComponent {
